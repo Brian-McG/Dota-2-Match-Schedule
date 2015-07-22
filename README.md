@@ -18,6 +18,7 @@
   - Add refresh button
   - Cache images
   - Add live tile
+  - Add indicator that app is loading data
 
 ####Special Thanks:
 The app makes use of [Daily Dota 2's](http://dailydota2.com/) freely available [api](http://dailydota2.com/api).
