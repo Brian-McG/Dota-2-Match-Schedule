@@ -1,6 +1,6 @@
-#Dota 2 Pro match schedule
-##Windows Phone
-###Features
+#Dota 2 Match Schedule
+######for Windows Phone
+####Features:
   - Match schedule
    - Teams
    - Tournament
@@ -8,12 +8,16 @@
    - Format
   - Current match results
 
-###Future Features
+####Future Features:
   - Recent results
 
-###To-do
+####To-do:
   - This is currently a quick and rough prototype. Which modifies the default app template. A cleanup and refactor of the code is required.
   - Add unit tests for all current and future code (Template does not contain unit tests).
+  - Add auto refresh
+  - Add refresh button
+  - Cache images
+  - Add live tile
 
-###Special Thanks
+####Special Thanks:
 The app makes use of [Daily Dota 2's](http://dailydota2.com/) freely available [api](http://dailydota2.com/api).
