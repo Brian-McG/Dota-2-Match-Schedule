@@ -19,6 +19,7 @@
   - Cache images
   - Add live tile
   - Add indicator that app is loading data
+  - Create my own service which provides endpoints to valve match API
 
 ####Special Thanks:
 The app makes use of [Daily Dota 2's](http://dailydota2.com/) freely available [api](http://dailydota2.com/api).
