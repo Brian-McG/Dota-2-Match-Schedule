@@ -27,6 +27,7 @@ namespace Dota2MatchApp
     {
         private const string FirstGroupName = "FirstGroup";
         private const string SecondGroupName = "SecondGroup";
+        private DispatcherTimer dataReloadTimer;
 
         private readonly NavigationHelper navigationHelper;
         private readonly ObservableDictionary defaultViewModel = new ObservableDictionary();
@@ -41,6 +42,29 @@ namespace Dota2MatchApp
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
+
+            dataReloadTimer = new DispatcherTimer();
+            dataReloadTimer.Tick += DataReloadTimer_Tick;
+            dataReloadTimer.Interval = new TimeSpan(0, 1, 0);
+            dataReloadTimer.Start();
+        }
+        
+        public void StartTimer()
+        {
+            System.Diagnostics.Debug.WriteLine("Start Timer");
+            dataReloadTimer.Start();
+        }
+
+        public void StopTimer()
+        {
+            System.Diagnostics.Debug.WriteLine("Stop Timer");
+            dataReloadTimer.Stop();
+        }
+
+        private void DataReloadTimer_Tick(object sender, object e)
+        {
+            System.Diagnostics.Debug.WriteLine("Fetching Latest data");
+            NavigationHelper_LoadState(sender, null);
         }
 
         /// <summary>
@@ -73,9 +97,14 @@ namespace Dota2MatchApp
         /// session. The state will be null the first time a page is visited.</param>
         private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
+            this.DefaultViewModel[FirstGroupName] = null;
             // TODO: Create an appropriate data model for your problem domain to replace the sample data
             var sampleDataGroup = await SampleDataSource.GetGroupAsync("Group-1");
             this.DefaultViewModel[FirstGroupName] = sampleDataGroup;
+            if (!dataReloadTimer.IsEnabled)
+            {
+                StartTimer();
+            }
         }
 
         /// <summary>
@@ -88,35 +117,18 @@ namespace Dota2MatchApp
         /// serializable state.</param>
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
-            // TODO: Save the unique state of the page here.
+            StopTimer();
         }
 
         /// <summary>
         /// Adds an item to the list when the app bar button is clicked.
         /// </summary>
-        private void AddAppBarButton_Click(object sender, RoutedEventArgs e)
+        private async void ReloadAppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            string groupName = this.pivot.SelectedIndex == 0 ? FirstGroupName : SecondGroupName;
-            var group = this.DefaultViewModel[groupName] as SampleDataGroup;
-            var nextItemId = group.Items.Count + 1;
-            var newItem = new SampleDataItem(
-                string.Format(CultureInfo.InvariantCulture, "Group-{0}-Item-{1}", this.pivot.SelectedIndex + 1, nextItemId),
-                string.Format(CultureInfo.CurrentCulture, this.resourceLoader.GetString("NewItemTitle"), nextItemId),
-                string.Empty,
-                string.Empty,
-                string.Empty,
-                string.Empty,
-                string.Empty,
-                string.Empty,
-                DateTime.Now.ToString(),
-                "0");
 
-            group.Items.Add(newItem);
+            Frame rootFrame = Window.Current.Content as Frame;
+            rootFrame.Navigate(typeof(PivotPage), null);
 
-            // Scroll the new item into view.
-            var container = this.pivot.ContainerFromIndex(this.pivot.SelectedIndex) as ContentControl;
-            var listView = container.ContentTemplateRoot as ListView;
-            listView.ScrollIntoView(newItem, ScrollIntoViewAlignment.Leading);
         }
 
         /// <summary>

@@ -128,30 +128,23 @@ namespace Dota2MatchApp.Data
 
         private async Task GetSampleDataAsync()
         {
-            if (this._groups.Count != 0)
-                return;
-            System.Diagnostics.Debug.WriteLine("It gets here 1");
-            Uri dataUri = new Uri("http://dailydota2.com/match-api");
+            _groups.Clear();
+            //System.Diagnostics.Debug.WriteLine("It gets here 1");
+            UriBuilder uriBuilder = new UriBuilder("http", "ec2-54-229-206-249.eu-west-1.compute.amazonaws.com", 80, "match_api");
+            Uri dataUri = uriBuilder.Uri;
 
-            //StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(dataUri);
             HttpClient client = new HttpClient();
             var response = await client.GetAsync(dataUri);
             var result = await response.Content.ReadAsStringAsync();
-            //string jsonText = await FileIO.ReadTextAsync(result);
-            System.Diagnostics.Debug.WriteLine(result.ToString());
-            System.Diagnostics.Debug.WriteLine(result);
-            JsonObject jsonObject = JsonObject.Parse(result);
-            System.Diagnostics.Debug.WriteLine("It gets here 2");
+
+            var jsonObject = JsonObject.Parse(result);
             int timestamp = (int)jsonObject["timestamp"].GetNumber();
             SampleDataGroup group = new SampleDataGroup("Group-1");
-            System.Diagnostics.Debug.WriteLine("It gets here 3");
             foreach (JsonValue itemValue in jsonObject["matches"].GetArray())
             {
-                System.Diagnostics.Debug.WriteLine("It gets here 4");
                 JsonObject itemObject = itemValue.GetObject();
                 System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
                 dtDateTime = dtDateTime.AddSeconds(Convert.ToDouble(itemObject["starttime_unix"].GetString())).ToLocalTime();
-                System.Diagnostics.Debug.WriteLine(dtDateTime.ToString());
                 const string prefixUrl = "http://dailydota2.com";
                 group.Items.Add(new SampleDataItem(itemObject["link"].GetString(),
                                                    itemObject["team1"].GetObject()["team_tag"].GetString(),

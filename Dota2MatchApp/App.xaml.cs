@@ -27,6 +27,7 @@ namespace Dota2MatchApp
     public sealed partial class App : Application
     {
         private TransitionCollection transitions;
+        
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -37,6 +38,14 @@ namespace Dota2MatchApp
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
         }
+
+
+
+        protected override void OnWindowCreated(WindowCreatedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("RESUMING!");
+        }
+
 
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
@@ -68,6 +77,7 @@ namespace Dota2MatchApp
                 // TODO: Change this value to a cache size that is appropriate for your application.
                 rootFrame.CacheSize = 1;
 
+                
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
                     // Restore the saved session state only when appropriate.
@@ -81,12 +91,11 @@ namespace Dota2MatchApp
                         // Assume there is no state and continue.
                     }
                 }
-
                 // Place the frame in the current Window.
                 Window.Current.Content = rootFrame;
             }
 
-            if (rootFrame.Content == null)
+            //if (rootFrame.Content == null)
             {
                 // Removes the turnstile navigation for startup.
                 if (rootFrame.ContentTransitions != null)
@@ -135,7 +144,7 @@ namespace Dota2MatchApp
         {
             var deferral = e.SuspendingOperation.GetDeferral();
             await SuspensionManager.SaveAsync();
-            deferral.Complete();
+            deferral.Complete();         
         }
     }
 }
